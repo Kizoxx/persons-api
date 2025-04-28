@@ -1,0 +1,179 @@
+basePath: /api/v1
+definitions:
+  models.PersonSwagger:
+    properties:
+      age:
+        type: integer
+      country:
+        type: string
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      first_name:
+        type: string
+      gender:
+        type: string
+      id:
+        type: integer
+      last_name:
+        type: string
+      patronymic:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: This is a sample Persons API.
+  title: Persons API
+  version: "1.0"
+paths:
+  /api/v1/people:
+    get:
+      consumes:
+      - application/json
+      description: Список людей с возможностью фильтрации по имени, полу, стране.
+        Пагинация (page, size).
+      parameters:
+      - description: Фильтр по имени (частичный поиск)
+        in: query
+        name: name
+        type: string
+      - description: Фильтр по полу (male/female)
+        in: query
+        name: gender
+        type: string
+      - description: Фильтр по стране (код страны)
+        in: query
+        name: country
+        type: string
+      - description: Номер страницы (начинается с 1)
+        in: query
+        name: page
+        type: integer
+      - description: Размер страницы
+        in: query
+        name: size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.PersonSwagger'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      summary: Получить список людей
+      tags:
+      - people
+    post:
+      consumes:
+      - application/json
+      description: Создает нового человека. Имя передается в запросе, остальное поле
+        (возраст, пол, страна) заполняются автоматически.
+      parameters:
+      - description: Новый человек (только имя обязательно)
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/models.PersonSwagger'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/models.PersonSwagger'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      summary: Создать нового человека
+      tags:
+      - people
+  /api/v1/people/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Удаляет человека по ID.
+      parameters:
+      - description: ID человека
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      summary: Удалить человека
+      tags:
+      - people
+    get:
+      consumes:
+      - application/json
+      description: Получить детали человека по его ID.
+      parameters:
+      - description: ID человека
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PersonSwagger'
+        "404":
+          description: Not Found
+          schema:
+            type: object
+      summary: Получить человека по ID
+      tags:
+      - people
+    put:
+      consumes:
+      - application/json
+      description: Обновляет данные человека. Переобогащает по имени.
+      parameters:
+      - description: ID человека
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Обновленные данные человека
+        in: body
+        name: person
+        required: true
+        schema:
+          $ref: '#/definitions/models.PersonSwagger'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.PersonSwagger'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+      summary: Обновить человека
+      tags:
+      - people
+swagger: "2.0"
